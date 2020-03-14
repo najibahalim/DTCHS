@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title size="large">
+      Select a Wing
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content> 
+  <ion-list>
+    <ion-item  *ngFor="let wing of wings" [routerLink]="'/flat/' + wing.id" >
+      <ion-label  class="ion-text-wrap">
+        <h2>{{wing.name}}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-item-divider color="primary">
+    <ion-label>
+     <ion-title> <ion-icon name="list-outline"></ion-icon>  <span style="padding:10px;">Actions</span></ion-title> 
+    </ion-label>
+  </ion-item-divider>
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="saveFile()" color=warning>
+      <ion-icon name="save-outline"></ion-icon> <p style="padding:5px;">Generate Excel File</p>
+    </ion-button>
+  </div>
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="shareFile()" color=warning>
+      <ion-icon name="share-social-outline"></ion-icon>
+      <p style="padding:5px;">Share Excel File</p>
+    </ion-button>
+  </div>
+</ion-content>

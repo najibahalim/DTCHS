@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title size="large">
+  <p align=center>  {{id}} </p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+      <!-- <ion-button href="flat/{{wing}}">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button> -->
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label text-wrap position="fixed">DATE : </ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" value={{date}} (ionChange)="this.handleDate($event)">
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="fixed" text-wrap>Kitchen Reading : <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input item-end required type="number" value="{{kitchenReading}}" (input)="this.handleKitchenValue($event)" #input></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="fixed" text-wrap>Toilet Reading : <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input required type="number" value = "{{toiletReading}}" (input)="this.handleToiletValue($event)"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click) = "processEntry('foward')">Add & Next Flat
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <!-- <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="processEntry('back')">
+      <ion-icon name="arrow-back-outline"></ion-icon> Add & Go Back
+    </ion-button>
+  </div> -->
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="cancel()" color=danger>
+    <ion-icon name="close-outline"></ion-icon> Cancel
+    </ion-button>
+  </div>
+    <div class="ion-padding">
+      <ion-button expand="block" class="ion-no-margin" (click)="home()" color=secondary>
+        <ion-icon name="home-outline"></ion-icon> <p style="padding:5px;"> Cancel & Go Back to Main Page</p>
+      </ion-button>
+    </div>
+
+
+
+</ion-content>

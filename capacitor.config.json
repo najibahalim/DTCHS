@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "DTCHS",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}

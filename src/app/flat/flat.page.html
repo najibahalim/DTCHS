@@ -1,0 +1,23 @@
+
+<ion-header>
+  <ion-toolbar  color=primary>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+            <ion-title size="large">
+              <p align=center>Select a Flat</p>
+              
+            </ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  
+  <ion-list>
+    <ion-item *ngFor="let flat of flats" [routerLink]="'/message/' + wingId + flat">
+      <ion-label class="ion-text-wrap">
+        <h2> {{wingId }}  {{flat}} </h2>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+</ion-content>

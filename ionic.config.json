@@ -1,0 +1,8 @@
+{
+  "name": "DTCHS",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}
