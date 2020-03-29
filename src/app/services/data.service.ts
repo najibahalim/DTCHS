@@ -53,7 +53,7 @@ export class DataService {
       nextFlatId += "10";
       if(flatid[2] === "7") {
         nextFlatId += "G-";
-        if(nextFlatId[0]==="C") {
+        if(flatid[0]==="C") {
           return "home";
         } else {
           nextFlatId += String.fromCharCode(flatid.charCodeAt(0) + 1)

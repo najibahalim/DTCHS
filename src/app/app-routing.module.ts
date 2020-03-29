@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'flat/:id',
     loadChildren: () => import('./flat/flat.module').then(m => m.FlatPageModule)
   },
+  {
+    path: 'image-viewer',
+    loadChildren: () => import('./image-viewer/image-viewer.module').then( m => m.ImageViewerPageModule)
+  },
 ];
 
 @NgModule({

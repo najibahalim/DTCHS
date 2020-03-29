@@ -5,6 +5,7 @@ import { File } from '@ionic-native/file/ngx';
 import * as XLSX from 'xlsx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -84,8 +85,29 @@ export class DatabaseService {
       return file.getDirectory(directoryEntry, "DTCHS", {
         create: true,
         exclusive: false
-      }).then(function () {
-        return directoryEntry.nativeURL + "DTCHS/";
+      }).then(function (url) {
+        console.log(url);
+        return file.getDirectory(url, "Reports", { create: true, exclusive: false }).then(() => {
+          return directoryEntry.nativeURL + "DTCHS/" + "Reports" + "/";
+        })
+      });
+    });
+  }
+
+  getImageStoragePath(flatId) {
+    let file = this.file;
+    return this.file.resolveDirectoryUrl(this.file.externalRootDirectory).then(function (directoryEntry) {
+      return file.getDirectory(directoryEntry, "DTCHS", {
+        create: true,
+        exclusive: false
+      }).then(function (url) {
+        return file.getDirectory(url, "Images", { create: true, exclusive: false }).then((lastUrl) => {
+          return file.getDirectory(lastUrl, flatId, { create: true, exclusive: false }).then((directoryObj)=>{
+           return directoryObj;
+          })
+         
+        })
+
       });
     });
   }
@@ -167,18 +189,26 @@ export class DatabaseService {
 
   getEntries(flat): Promise<any> {
     return this.database.executeSql('SELECT * FROM watermeter WHERE flat = ?', [flat]).then(data => {
-      let readings = [];
+      let readings:Map<string, object> = new Map();
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
-          readings.push({
-            date: data.rows.item(i).date,
-            value: data.rows.item(i).value,
+          let dateStr = new Date(data.rows.item(i).date).toLocaleDateString();
+          let curReading;
+          if(readings.has(dateStr))
+          {
+            curReading = readings.get(dateStr);
+          }
+          else{
+            curReading = {date:dateStr, values : []};
+          }
+          curReading.values.push({
             type: data.rows.item(i).type,
+            value: data.rows.item(i).value
           });
+          readings.set(dateStr,curReading);
         }
       }
-      console.log(readings);
-      return readings;
+      return Array.from(readings.values());
     });
   }
   addEntry(date, value, type, flat) {
@@ -186,5 +216,41 @@ export class DatabaseService {
     return this.database.executeSql('INSERT INTO watermeter (flat, date, value, type) VALUES (?, ?, ?, ?)', data).then(data => {
       console.log("Data added for flat" + flat);
     });
+  }
+
+  async saveImage(fromPath, fromName, toName, flatId){
+    try{
+      let toPath = await (await this.getImageStoragePath(flatId.replace("-","_"))).nativeURL;
+      let resp = await this.file.copyFile(fromPath, fromName, toPath, toName);
+      return resp.nativeURL;
+    }catch(err){
+      console.log(err);
+    }
+      
+  }
+
+  async changeImage(fromPath, fromName, toName, flatId){
+    try {
+      let toPath = await (await this.getImageStoragePath(flatId.replace("-", "_"))).nativeURL;
+      await this.file.removeFile(toPath, toName);
+      let resp = await this.file.copyFile(fromPath, fromName, toPath, toName);
+      return resp.nativeURL;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getImage(fileName, flatId){
+    try{
+      const pathObj = await this.getImageStoragePath(flatId.replace("-", "_"));
+      const fileRes = await this.file.getFile(pathObj,fileName,{create:false});
+      // let u1 = await this.file.readAsDataURL(pathObj.nativeURL, fileName);
+      // console.log(u1);
+      return fileRes;
+
+    }catch{
+      console.log("FIle Not Found");
+       return "";
+    }
   }
 }
