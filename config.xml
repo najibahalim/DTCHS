@@ -3,7 +3,7 @@
     <name>DTCHS</name>
     <description>Housing society app for DTCHS</description>
     <author email="najibarhalim@gmail.com" href="http://ionicframework.com/">Najiba Halim</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -103,7 +103,7 @@
     <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
         <string>You can take photos</string>
     </config-file>
-    <allow-navigation href="http://localhost:8100" sessionid="d3df58d6" />
+    <allow-navigation href="http://localhost:8100" sessionid="fe09dc84" />
     <engine name="browser" spec="^5.0.4" />
     <engine name="android" spec="^7.1.4" />
 </widget>

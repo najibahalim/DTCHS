@@ -26,6 +26,10 @@ export class ViewMessagePage implements OnInit {
   readings: Object[];
   win: any = window;
   imagePath = '';
+  kitchenName = '';
+  toiletName = '';
+  kitchenPath = '';
+  toiletPath = '';
   constructor(
     private data: DataService,
     private activatedRoute: ActivatedRoute,
@@ -65,13 +69,18 @@ export class ViewMessagePage implements OnInit {
   }
   
 
-  async presentPopover(ev: any) {
+  async presentPopover(type, ev: any) {
+    let imgPath = '';
+    if(type === 1 )
+      imgPath = this.kitchenPath;
+    else 
+      imgPath = this.toiletPath;
     const popover = await this.popoverController.create({
       component: ImageViewerPage,
       event: ev,
       translucent: true,
       componentProps:{
-        imageUrl: this.imagePath
+        imageUrl: imgPath
       },
     });
     return await popover.present();
@@ -84,13 +93,21 @@ export class ViewMessagePage implements OnInit {
   handleDate = (event) => {
     console.log(event.target.value);
     this.date = event.target.value;
-    this.imageName = new Date(event.target.value).toDateString() + ".jpg";
-    this.imagePath = '';
-    this.databaseService.getImage(this.imageName, this.id).then((file) => {
+    let d = new Date(event.target.value);
+    this.toiletName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-'+ d.getDate() + "T.jpg";
+    this.kitchenName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "K.jpg";
+    this.toiletPath = '';
+    this.kitchenPath = '';
+    this.databaseService.getImage(this.toiletName, this.id).then((file) => {
       if (file) {
-        this.imagePath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
+        this.toiletPath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
       }
-    })
+    });
+    this.databaseService.getImage(this.kitchenName, this.id).then((file) => {
+      if (file) {
+        this.kitchenPath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
+      }
+    });
     this.saveDate();
 
   }
@@ -102,26 +119,32 @@ export class ViewMessagePage implements OnInit {
       );
   }
   getDate = () => {
+    this.toiletPath = '';
+    this.kitchenPath = '';
     this.nativeStorage.getItem('date')
       .then(
         (data) => { 
         this.date = data.value; 
-        this.imageName = new Date(data.value).toDateString() + ".jpg";
-        this.imagePath = '';
-          this.databaseService.getImage(this.imageName, this.id).then((file) => {
-            if (file) {
-              this.imagePath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
-            }
-          })
+        let d = new Date(data.value);
+        this.toiletName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "T.jpg";
+        this.kitchenName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "K.jpg";
+         
       }
-        
       ).catch(()=>{
-        this.imageName = new Date().toDateString() + ".jpg";
-        this.databaseService.getImage(this.imageName, this.id).then((file) => {
+        let d = new Date();
+        this.toiletName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "T.jpg";
+        this.kitchenName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "K.jpg";
+      }).finally(()=>{
+        this.databaseService.getImage(this.toiletName, this.id).then((file) => {
           if (file) {
-            this.imagePath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
+            this.toiletPath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
           }
-        })
+        });
+        this.databaseService.getImage(this.kitchenName, this.id).then((file) => {
+          if (file) {
+            this.kitchenPath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
+          }
+        });
       });
   }
   getBackButtonText() {
@@ -169,10 +192,17 @@ export class ViewMessagePage implements OnInit {
     this.kitchenReading = event.target.value;
   }
 
-  pickImage() {
+  pickImage(type) {
     if(!this.date){
       alert("Add Date First!");
       return;
+    }
+    console.log(type)
+    let imgName = '';
+    if(type===1){
+      imgName = this.kitchenName;
+    } else {
+      imgName = this.toiletName;
     }
     const options: CameraOptions = {
       quality: 100,
@@ -188,35 +218,42 @@ export class ViewMessagePage implements OnInit {
       console.log(imageLink);
       const tempFilename = imageLink.substr(imageLink.lastIndexOf('/') + 1);
       const tempBaseFilesystemPath = imageLink.substr(0, imageLink.lastIndexOf('/') + 1);
-      if(this.imagePath){
-        this.imagePath = '';
-        this.databaseService.changeImage(tempBaseFilesystemPath, tempFilename, this.imageName, this.id).then((url) => {
-          this.imagePath = this.win.Ionic.WebView.convertFileSrc(imageLink);
+      if((type === 1 && this.kitchenPath!='') || (type===2 && this.toiletPath!='')){
+        if(type===1)
+          this.kitchenPath = '';
+        if(type ===2)
+          this.toiletPath = '';
+        this.databaseService.changeImage(tempBaseFilesystemPath, tempFilename, imgName, this.id).then((url) => {
+          if(type === 1)
+            this.kitchenPath = this.win.Ionic.WebView.convertFileSrc(imageLink);
+          else 
+            this.toiletPath = this.win.Ionic.WebView.convertFileSrc(imageLink);
         });
       }else{
-        this.databaseService.saveImage(tempBaseFilesystemPath, tempFilename, this.imageName, this.id).then((url) => {
-          this.imagePath = this.win.Ionic.WebView.convertFileSrc(url);
+        this.databaseService.saveImage(tempBaseFilesystemPath, tempFilename, imgName, this.id).then((url) => {
+          if (type === 1)
+            this.kitchenPath = this.win.Ionic.WebView.convertFileSrc(imageLink);
+          else
+            this.toiletPath = this.win.Ionic.WebView.convertFileSrc(imageLink);
         });
       }
      
-
-
     }, (err) => {
       // Handle error
     });
   }
 
-  showImage(ImagePath) {
-    var copyPath = ImagePath;
-    var splitPath = copyPath.split('/');
-    var imageName = splitPath[splitPath.length - 1];
-    var filePath = ImagePath.split(imageName)[0];
+  // showImage(ImagePath) {
+  //   var copyPath = ImagePath;
+  //   var splitPath = copyPath.split('/');
+  //   var imageName = splitPath[splitPath.length - 1];
+  //   var filePath = ImagePath.split(imageName)[0];
 
-    this.file.readAsDataURL(filePath, imageName).then(base64 => {
-      this.imagePath = base64;
-    }, error => {
-      alert('Error in showing image' + error);
-    });
-  }
+  //   this.file.readAsDataURL(filePath, imageName).then(base64 => {
+  //     this.imagePath = base64;
+  //   }, error => {
+  //     alert('Error in showing image' + error);
+  //   });
+  // }
 
 }

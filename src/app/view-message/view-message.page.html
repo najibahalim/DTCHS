@@ -22,21 +22,26 @@
       </ion-label>
       <ion-input item-end required type="number" value="{{kitchenReading}}" (input)="this.handleKitchenValue($event)"
         #input></ion-input>
+          <ion-thumbnail slot="end" (click)="presentPopover(1)">
+            <img [src]="kitchenPath">
+          </ion-thumbnail>
+            <ion-button (click)="pickImage(1)">
+              <span *ngIf="!kitchenPath">Add Image</span>
+              <span *ngIf="kitchenPath">Change Image</span>
+            </ion-button>
     </ion-item>
 
     <ion-item>
       <ion-label position="fixed" text-wrap>Toilet Reading : <ion-text color="danger">*</ion-text>
       </ion-label>
       <ion-input required type="number" value="{{toiletReading}}" (input)="this.handleToiletValue($event)"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-thumbnail slot="start" (click)="presentPopover()">
-        <img [src]="imagePath">
-      </ion-thumbnail>
-      <ion-button (click)="pickImage()">
-        <span *ngIf="!imagePath">Add Image</span>
-        <span *ngIf="imagePath">Change Image</span>
-      </ion-button>
+        <ion-thumbnail slot="end" (click)="presentPopover(2)">
+          <img [src]="toiletPath">
+        </ion-thumbnail>
+        <ion-button (click)="pickImage(2)">
+          <span *ngIf="!toiletPath">Add Image</span>
+          <span *ngIf="toiletPath">Change Image</span>
+        </ion-button>
     </ion-item>
    
 
