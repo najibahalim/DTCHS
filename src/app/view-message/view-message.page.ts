@@ -23,7 +23,7 @@ export class ViewMessagePage implements OnInit {
   toiletReading: number ;
   id: string;
   wing: string;
-  readings: Object[];
+  readings: any;
   win: any = window;
   imagePath = '';
   kitchenName = '';
@@ -62,6 +62,13 @@ export class ViewMessagePage implements OnInit {
       }, 150);
       this.databaseService.getEntries(this.id).then(data => {
         this.readings = data;
+        let c_date = new Date(this.date);
+        let dateStr = c_date.getDate() + "/" + (c_date.getMonth() + 1) + "/" + c_date.getFullYear();
+        let currentReading = data.find(reading => reading.date == dateStr);
+        if(currentReading && currentReading.values && currentReading.values.length > 0){
+          this.toiletReading = currentReading.values.find(val=> val.type=="Toilet").value;
+          this.kitchenReading = currentReading.values.find(val=> val.type=="Kitchen").value;
+        }
       });
      
      
@@ -94,6 +101,12 @@ export class ViewMessagePage implements OnInit {
     console.log(event.target.value);
     this.date = event.target.value;
     let d = new Date(event.target.value);
+    let dateStr = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+    let currentReading = this.readings.find(reading => reading.date == dateStr);
+    if (currentReading && currentReading.values && currentReading.values.length > 0) {
+      this.toiletReading = currentReading.values.find(val => val.type == "Toilet").value;
+      this.kitchenReading = currentReading.values.find(val => val.type == "Kitchen").value;
+    }
     this.toiletName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-'+ d.getDate() + "T.jpg";
     this.kitchenName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "K.jpg";
     this.toiletPath = '';
@@ -155,11 +168,14 @@ export class ViewMessagePage implements OnInit {
 
   processEntry(route) {
     console.log("Processing Entry...");
-    if(this.toiletReading >0 && this.kitchenReading > 0) {
+    if((this.toiletReading  && this.kitchenReading ) || (this.kitchenPath!='' || this.toiletPath!='')) {
       //Add the value in Database
-      this.databaseService.addEntry(this.date, this.toiletReading, "Toilet", this.id);
-      this.databaseService.addEntry(this.date, this.kitchenReading, "Kitchen", this.id);
-      console.log("Values Added")
+      if(this.toiletReading && this.kitchenReading){
+        this.databaseService.addEntry(this.date, this.toiletReading, "Toilet", this.id);
+        this.databaseService.addEntry(this.date, this.kitchenReading, "Kitchen", this.id);
+        console.log("Values Added")
+      }
+      
       this.kitchenReading = null;
       this.toiletReading = null;
       if (route === "back") {
@@ -176,7 +192,7 @@ export class ViewMessagePage implements OnInit {
 
   async presentToast() {
     const toast = await this.toastController.create({
-      message: 'Reading cannot be 0',
+      message: 'Add reading or Image',
       duration: 5000,
       position: "top"
     });

@@ -212,10 +212,26 @@ export class DatabaseService {
     });
   }
   addEntry(date, value, type, flat) {
-    let data = [flat, date, value, type];
-    return this.database.executeSql('INSERT INTO watermeter (flat, date, value, type) VALUES (?, ?, ?, ?)', data).then(data => {
-      console.log("Data added for flat" + flat);
-    });
+    //check if entry exists. If yes then update it. else add
+    this.database.executeSql('SELECT * from watermeter where flat = ? and date = ? and type = ?',[flat,date, type]).then(data => {
+      console.log('Found!');
+      console.log(data)
+      if(data.rows.length > 0){
+        //update
+        return this.database.executeSql(`UPDATE  watermeter set value = ${value} where flat=? and date=? and type = ?`, [flat, date, type]).then(data => {
+          console.log("Data updated for flat" + flat);
+        });
+      } else {
+        //create
+        let data = [flat, date, value, type];
+        return this.database.executeSql('INSERT INTO watermeter (flat, date, value, type) VALUES (?, ?, ?, ?)', data).then(data => {
+          console.log("Data added for flat" + flat);
+        });
+      }
+    }).catch(err=>{
+      console.log(err);
+    })
+    
   }
 
   async saveImage(fromPath, fromName, toName, flatId){
