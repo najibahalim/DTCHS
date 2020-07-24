@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title size="large">
+      <p align=center> {{flatId}} </p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-button href="flat/{{wing}}">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button> -->
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label text-wrap position="fixed">DATE : </ion-label>
+      <ion-label text-wrap position="fixed">{{displayDate}} </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="fixed" text-wrap>Reading : <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input item-end required type="number" value="{{reading}}" (input)="this.handleValue($event)"
+        #input></ion-input>
+          <ion-thumbnail slot="end" (click)="presentPopover()">
+            <img [src]="path">
+          </ion-thumbnail>
+            <ion-button (click)="pickImage()">
+              <span *ngIf="!path">Add Image</span>
+              <span *ngIf="path">Change Image</span>
+            </ion-button>
+    </ion-item>
+    <span *ngIf="invalidValue" class="warn">Value less than previous month : {{previousReading}}</span>
+
+
+
+  </ion-list>
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="processEntry('foward')">Add & Next Flat
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <!-- <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="processEntry('back')">
+      <ion-icon name="arrow-back-outline"></ion-icon> Add & Go Back
+    </ion-button>
+  </div> -->
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="cancel()" color=danger>
+      <ion-icon name="close-outline"></ion-icon> Cancel
+    </ion-button>
+  </div>
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" (click)="home()" color=secondary>
+      <ion-icon name="home-outline"></ion-icon>
+      <p style="padding:5px;"> Cancel & Go Back to Main Page</p>
+    </ion-button>
+  </div>
+
+  <ion-item-group>
+    <ion-item-divider>
+      <ion-label>Previous readings</ion-label>
+    </ion-item-divider>
+
+    <ion-item *ngFor="let reading of readings">
+      <ion-label>{{reading.date}}</ion-label>
+      <ion-grid>
+        <ion-row >
+          <ion-col *ngFor="let value of reading.values">
+            <ion-note>{{value.type}}:{{value.value}}</ion-note>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </ion-item>
+
+  </ion-item-group>
+
+
+
+</ion-content>

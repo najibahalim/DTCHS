@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-
+import {flats} from '../addReadings/services/data.service';
 
 export interface Reading {
   type: ReadingType;
@@ -75,6 +75,14 @@ export class DataService {
     }
     return '/message/' + nextFlatId;
 
+  }
+
+  getNextSectionFlat(currentFlat) {
+    let currentIndex = flats.indexOf(currentFlat);
+    if(currentIndex + 1 === flats.length){
+      return "home";
+    }
+    return "/addFlatReading/" + flats[currentIndex + 1];
   }
 
   public getMessages(): string[] {

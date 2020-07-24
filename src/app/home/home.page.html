@@ -30,4 +30,25 @@
       <p style="padding:5px;">Share Excel File</p>
     </ion-button>
   </div>
+
+    <div class="ion-padding">
+     <a href="addreadings" class="addButton">   <ion-button expand="block" class="ion-no-margin" color=success>
+        <ion-icon name="add-circle"></ion-icon>
+        <p style="padding:5px;">Add Monthly Reading</p>
+      </ion-button></a>
+    </div>
+
+    <div class="ion-padding">
+      <a href="billing" class="addButton">
+       
+        <ion-button expand="block" class="ion-no-margin" color=danger>
+          <ion-icon name="document-outline"></ion-icon>
+          <p style="padding:5px;">Generate Bill</p>
+        </ion-button>
+     
+     </a>
+    </div>
+
+    <button ion-button full (click)="createPdf()">Create PDF</button>
+    <button ion-button full (click)="downloadPdf()" color="secondary" [disabled]="!pdfObj">Download PDF</button>
 </ion-content>

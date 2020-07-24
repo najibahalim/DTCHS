@@ -14,7 +14,9 @@ import { File } from '@ionic-native/file/ngx/index';
 import { FileOpener } from '@ionic-native/file-opener/ngx/index';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Camera } from '@ionic-native/Camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { ImageViewerPageModule } from './image-viewer/image-viewer.module';
+
 
 
 
@@ -31,6 +33,7 @@ import { ImageViewerPageModule } from './image-viewer/image-viewer.module';
     FileOpener,
     NativeStorage,
     SocialSharing,
+    WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

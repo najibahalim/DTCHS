@@ -16,6 +16,22 @@ const routes: Routes = [
     path: 'image-viewer',
     loadChildren: () => import('./image-viewer/image-viewer.module').then( m => m.ImageViewerPageModule)
   },
+  {
+    path: 'addreadings',
+    loadChildren: () => import('./addReadings/home/home.module').then(m => m.AddReadingsHomeModule)
+  },
+  {
+    path: 'addMonthReading/:id',
+    loadChildren: () => import('./addReadings/month/month.module').then(m => m.AddMonthReadingsModule)
+  },
+  {
+    path: 'addFlatReading/:id',
+    loadChildren: () => import('./addReadings/view-message/view-message.module').then(m => m.ViewMessagePageModule)
+  },
+  {
+    path: 'addSectionReading/:id',
+    loadChildren: () => import('./addReadings/section/section.module').then(m => m.AddSectionReadingsModule)
+  },
 ];
 
 @NgModule({

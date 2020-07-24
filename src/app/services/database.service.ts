@@ -79,7 +79,7 @@ export class DatabaseService {
     
   }
 
-  getStoragePath() {
+  getStoragePath(folderName) {
     let file = this.file;
     return this.file.resolveDirectoryUrl(this.file.externalRootDirectory).then(function (directoryEntry) {
       return file.getDirectory(directoryEntry, "DTCHS", {
@@ -87,8 +87,8 @@ export class DatabaseService {
         exclusive: false
       }).then(function (url) {
         console.log(url);
-        return file.getDirectory(url, "Reports", { create: true, exclusive: false }).then(() => {
-          return directoryEntry.nativeURL + "DTCHS/" + "Reports" + "/";
+        return file.getDirectory(url, folderName, { create: true, exclusive: false }).then(() => {
+          return directoryEntry.nativeURL + "DTCHS/" + folderName + "/";
         })
       });
     });
@@ -139,7 +139,7 @@ export class DatabaseService {
       let blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
       let self = this;
       this.blob = blob;
-      this.getStoragePath().then(function (url) {
+      this.getStoragePath("Reports").then(function (url) {
         let fileName = new Date().toDateString() + ".xlsx"
         self.url = url + fileName;
         self.file.writeFile(url,fileName, blob, { replace: true }).then(() => {

@@ -58,6 +58,10 @@ ion-item ion-note.md {
   background: var(--ion-color-primary);
 }
 
+.addButton {
+  text-decoration: none !important;
+}
+
 ion-footer ion-title {
   font-size: 11px;
   font-weight: normal;

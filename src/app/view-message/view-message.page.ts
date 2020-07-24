@@ -151,6 +151,8 @@ export class ViewMessagePage implements OnInit {
         this.databaseService.getImage(this.toiletName, this.id).then((file) => {
           if (file) {
             this.toiletPath = this.win.Ionic.WebView.convertFileSrc(file.nativeURL);
+            console.log('$$$$$$$$');
+            console.log(this.toiletPath);
           }
         });
         this.databaseService.getImage(this.kitchenName, this.id).then((file) => {
