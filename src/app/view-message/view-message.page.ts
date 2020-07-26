@@ -19,8 +19,8 @@ export class ViewMessagePage implements OnInit {
   @ViewChild('input',{static:true}) myInput;
   date:string = new Date().toString();
   imageName: string;
-  kitchenReading: number ;
-  toiletReading: number ;
+  kitchenReading: any ;
+  toiletReading: any ;
   id: string;
   wing: string;
   readings: any;
@@ -66,8 +66,14 @@ export class ViewMessagePage implements OnInit {
         let dateStr = c_date.getDate() + "/" + (c_date.getMonth() + 1) + "/" + c_date.getFullYear();
         let currentReading = data.find(reading => reading.date == dateStr);
         if(currentReading && currentReading.values && currentReading.values.length > 0){
-          this.toiletReading = currentReading.values.find(val=> val.type=="Toilet").value;
-          this.kitchenReading = currentReading.values.find(val=> val.type=="Kitchen").value;
+          this.toiletReading = currentReading.values.find(val=> val.type=="Toilet");
+          this.kitchenReading = currentReading.values.find(val=> val.type=="Kitchen");
+          if(this.toiletReading){
+            this.toiletReading = this.toiletReading.value;
+          }
+          if (this.kitchenReading) {
+            this.kitchenReading = this.kitchenReading.value;
+          }
         }
       });
      
@@ -102,11 +108,14 @@ export class ViewMessagePage implements OnInit {
     this.date = event.target.value;
     let d = new Date(event.target.value);
     let dateStr = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
-    let currentReading = this.readings.find(reading => reading.date == dateStr);
-    if (currentReading && currentReading.values && currentReading.values.length > 0) {
-      this.toiletReading = currentReading.values.find(val => val.type == "Toilet").value;
-      this.kitchenReading = currentReading.values.find(val => val.type == "Kitchen").value;
+    if(this.readings){
+      let currentReading = this.readings.find(reading => reading.date == dateStr);
+      if (currentReading && currentReading.values && currentReading.values.length > 0) {
+        this.toiletReading = currentReading.values.find(val => val.type == "Toilet").value;
+        this.kitchenReading = currentReading.values.find(val => val.type == "Kitchen").value;
+      }
     }
+   
     this.toiletName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-'+ d.getDate() + "T.jpg";
     this.kitchenName = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + "K.jpg";
     this.toiletPath = '';

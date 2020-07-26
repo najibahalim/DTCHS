@@ -62,7 +62,6 @@ export class HomePage {
 
         // Save the PDF to the data Directory of our App
         let url = await this.dbService.getStoragePath("Bills");
-        console.log(url);
         this.file.writeFile(url, 'DTCHS.pdf', blob, { replace: true }).then(fileEntry => {
           // Open the PDf with the correct OS tools
           this.fileOpener.open(url + 'DTCHS.pdf', 'application/pdf');

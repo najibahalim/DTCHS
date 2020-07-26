@@ -13,7 +13,7 @@
     <ion-item>
       <ion-label>Select Month</ion-label>
       <ion-select [(ngModel)]="selectedMonth" okText="Okay" name="month" cancelText="Dismiss"
-        (ionChange)="this.calculateSlabs()">
+        (change)="this.calculateSlabs()">
         <span *ngFor="let m of months">
           <ion-select-option value="{{m}}">{{m}}</ion-select-option>
         </span>
@@ -23,8 +23,8 @@
     <ion-item>
       <ion-label position="fixed">No of Tankers</ion-label>
       <ion-input type="number" [(ngModel)]="noOfTankers" name="tankers" clearOnEdit=true
-        (ionChange)="this.calculateSlabs()"></ion-input>
-      <span slot="end"> x 1000 Litres</span>
+        (change)="this.calculateSlabs()"></ion-input>
+      <span slot="end"> x 10000 Litres</span>
     </ion-item>
 
     <ion-item-divider color=light>
@@ -65,15 +65,15 @@
     <ion-item>
       <ion-label position="fixed">Slab 3 cost</ion-label>
       <span>₹</span>
-      <ion-input type="number" [(ngModel)]="slab3Cost" name="slab3Cost" clearOnEdit=true></ion-input>
+      <ion-input type="number" [(ngModel)]="slab3Cost" name="slab3Cost"   (change)="this.calculateSlabs()" clearOnEdit=true></ion-input>
       <span slot="end"> / Litre</span>
     </ion-item>
     <br />
     <div class="ion-padding">
       <a href="billing" class="addButton">
-        <ion-button expand="block" class="ion-no-margin" type="sumbit" color=primary>
+        <ion-button expand="block" class="ion-no-margin"  disabled = {{disabled}} type="sumbit" color=primary>
           <ion-icon name="document-outline"></ion-icon>
-          <p style="padding:5px;">Generate Bill</p>
+          <p style="padding:5px;">Generate Bills</p>
         </ion-button>
 
       </a>
