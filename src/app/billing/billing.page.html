@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title size="large">
+      Monthly Billing
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="generateReport()">
+
+
+    <ion-item>
+      <ion-label>Select Month</ion-label>
+      <ion-select [(ngModel)]="selectedMonth" okText="Okay" name="month" cancelText="Dismiss"
+        (ionChange)="this.calculateSlabs()">
+        <span *ngFor="let m of months">
+          <ion-select-option value="{{m}}">{{m}}</ion-select-option>
+        </span>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="fixed">No of Tankers</ion-label>
+      <ion-input type="number" [(ngModel)]="noOfTankers" name="tankers" clearOnEdit=true
+        (ionChange)="this.calculateSlabs()"></ion-input>
+      <span slot="end"> x 1000 Litres</span>
+    </ion-item>
+
+    <ion-item-divider color=light>
+
+    </ion-item-divider>
+    <ion-item>
+      <ion-label position="fixed">Slab 1</ion-label>
+      <span>0 - </span>
+      <ion-input type="number" [(ngModel)]="slab1" name="slab1" clearOnEdit=true></ion-input>
+      <span slot="end"> Litres</span>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Slab 2</ion-label>
+      <span>{{slab1}} - </span>
+      <ion-input type="number" [(ngModel)]="slab2" name="slab2" clearOnEdit=true></ion-input>
+      <span slot="end"> Litres</span>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Slab 3</ion-label>
+      <span>Above {{slab2}} Litres </span>
+    </ion-item>
+    <ion-item-divider color=light>
+
+    </ion-item-divider>
+    <ion-item>
+      <ion-label position="fixed">Slab 1 cost</ion-label>
+      <span>₹</span>
+      <ion-input type="number" [(ngModel)]="slab1Cost" name="slab1Cost" clearOnEdit=true></ion-input>
+      <span slot="end"> / Litre</span>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Slab 2 cost</ion-label>
+      <span>₹</span>
+      <ion-input type="number" [(ngModel)]="slab2Cost" name="slab2Cost" clearOnEdit=true></ion-input>
+      <span slot="end"> / Litre</span>
+
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Slab 3 cost</ion-label>
+      <span>₹</span>
+      <ion-input type="number" [(ngModel)]="slab3Cost" name="slab3Cost" clearOnEdit=true></ion-input>
+      <span slot="end"> / Litre</span>
+    </ion-item>
+    <br />
+    <div class="ion-padding">
+      <a href="billing" class="addButton">
+        <ion-button expand="block" class="ion-no-margin" type="sumbit" color=primary>
+          <ion-icon name="document-outline"></ion-icon>
+          <p style="padding:5px;">Generate Bill</p>
+        </ion-button>
+
+      </a>
+    </div>
+  </form>
+</ion-content>

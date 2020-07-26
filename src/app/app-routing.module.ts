@@ -32,6 +32,10 @@ const routes: Routes = [
     path: 'addSectionReading/:id',
     loadChildren: () => import('./addReadings/section/section.module').then(m => m.AddSectionReadingsModule)
   },
+  {
+    path: 'billing',
+    loadChildren: () => import('./billing/billing.module').then( m => m.BillingPageModule)
+  }
 ];
 
 @NgModule({
