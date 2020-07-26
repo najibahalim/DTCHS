@@ -1,4 +1,4 @@
-export class PDFUtils {
+export class PDFUtils2 {
 
  public static async getPdfTemplate(){
     return {
@@ -32,13 +32,13 @@ export class PDFUtils {
                   ]
                 },
                 {
-                  image: await PDFUtils.getBase64ImageFromURL(
+                  image: await PDFUtils2.getBase64ImageFromURL(
                     'http://localhost/_app_file_/storage/emulated/0/DTCHS/Images/A_G01/2020-7-1T.jpg'),
                   width: 180,
                   height: 180
                 },
                 {
-                  image: await PDFUtils.getBase64ImageFromURL(
+                  image: await PDFUtils2.getBase64ImageFromURL(
                     'http://localhost/_app_file_/storage/emulated/0/DTCHS/Images/A_G01/2020-7-1T.jpg'),
                   width: 180,
                   height: 180

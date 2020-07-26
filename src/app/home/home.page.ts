@@ -5,13 +5,13 @@ import { DatabaseService } from '../services/database.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import {PDFUtils} from './pdftemplate'
+import {PDFUtils2} from './pdftemplate'
 import { LoadingController } from '@ionic/angular';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { fromEventPattern } from 'rxjs';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -46,7 +46,7 @@ export class HomePage {
 
   }
   async createPdf() {
-    var docDefinition = await PDFUtils.getPdfTemplate();
+    var docDefinition = await PDFUtils2.getPdfTemplate();
     var imgPath = this.win.Ionic.WebView.convertFileSrc('file:///storage/emulated/0/DTCHS/Tedy.jpg');
     await this.showLoader();
     this.pdfObj = await pdfMake.createPdf(docDefinition);
