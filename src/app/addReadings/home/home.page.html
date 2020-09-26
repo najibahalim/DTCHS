@@ -14,6 +14,8 @@
   
   <ion-list>
     <ion-item *ngFor="let month of months; let i = index" [routerLink]="'/addMonthReading/' + dates[i]">
+        <ion-icon name="checkmark-outline" slot="end" *ngIf="ticks1[i]"></ion-icon>
+        <ion-icon name="checkmark-outline" slot="end" class="image" *ngIf="tick2"></ion-icon>
       <ion-label class="ion-text-wrap">
         <h2> {{month}} </h2>
       </ion-label>

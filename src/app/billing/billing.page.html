@@ -1,8 +1,12 @@
 <ion-header>
   <ion-toolbar color=primary>
-    <ion-title size="large">
-      Monthly Billing
-    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+      <ion-title size="large">
+        <p align=center>Monthly Billing</p>
+    
+      </ion-title>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +17,7 @@
     <ion-item>
       <ion-label>Select Month</ion-label>
       <ion-select [(ngModel)]="selectedMonth" okText="Okay" name="month" cancelText="Dismiss"
-        (change)="this.calculateSlabs()">
+        (ionChange)="this.calculateSlabs()">
         <span *ngFor="let m of months">
           <ion-select-option value="{{m}}">{{m}}</ion-select-option>
         </span>
@@ -70,13 +74,10 @@
     </ion-item>
     <br />
     <div class="ion-padding">
-      <a href="billing" class="addButton">
         <ion-button expand="block" class="ion-no-margin"  disabled = {{disabled}} type="sumbit" color=primary>
           <ion-icon name="document-outline"></ion-icon>
           <p style="padding:5px;">Generate Bills</p>
         </ion-button>
-
-      </a>
     </div>
   </form>
 </ion-content>

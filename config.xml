@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.dtchs" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>DTCHS</name>
+    <name>DTCHS Water Bill</name>
     <description>Housing society app for DTCHS</description>
     <author email="najibarhalim@gmail.com" href="http://ionicframework.com/">Najiba Halim</author>
     <content src="index.html" />

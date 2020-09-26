@@ -9,7 +9,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
   providedIn: 'root'
 })
 export class DatabaseService {
-  private database: SQLiteObject;
+  public database: SQLiteObject;
   private url: string;
   private blob;
   constructor(private plt: Platform, private sqlite: SQLite, private file: File, private fileOpener: FileOpener, private socialSharing: SocialSharing) {
@@ -26,6 +26,66 @@ export class DatabaseService {
         console.log(e);
       });
     });
+  }
+
+  dataAddedCount(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.database.executeSql(`SELECT date from watermeter`,[]).then(data => {
+          const dateMap = {};
+          const count = data.rows.length;
+          for(let i=0; i< count; i++) {
+            const currCount = dateMap[data.rows.item(i).date] || 0;
+            dateMap[data.rows.item(i).date] = currCount + 1;
+          } 
+          resolve(dateMap);
+        }).catch(err => {
+          debugger;
+          console.log(err);
+          resolve();
+        });
+
+    });
+  }
+
+
+  getSectionTicks(date: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.database.executeSql(`SELECT flat, type from watermeter WHERE  date = ?`,
+        [date]).then(data => {
+          const rows = [];
+          for (let index = 0; index < data.rows.length; index++) {
+            const currRow = data.rows.item(index);
+            rows.push(currRow.flat + currRow.type.charAt(0));
+          }
+          resolve(rows);
+        }).catch(err => {
+          console.log(err);
+          resolve();
+        });
+
+    });
+  }
+
+  getTicks(date: string, flats, type): Promise<any> {
+
+
+      return new Promise((resolve, reject) => {
+        this.database.executeSql(`SELECT flat from watermeter WHERE  date = ? AND 
+        flat IN ("${flats.join('", "')}") and type = ?`,
+          [date, type]).then(data => {
+          const rows = [];
+            for(let index = 0; index < data.rows.length; index++){
+              rows.push(data.rows.item(index));
+            }
+          resolve(rows);
+        }).catch(err => {
+          console.log(err);
+          resolve();
+        });
+       
+      });
+     
+
   }
 
   //gets data from db for generating bill
@@ -319,6 +379,7 @@ export class DatabaseService {
 
   }
 
+
   getEntries(flat): Promise<any> {
     return this.database.executeSql('SELECT * FROM watermeter WHERE flat = ?', [flat]).then(data => {
       let readings: Map<string, object> = new Map();
@@ -399,6 +460,17 @@ export class DatabaseService {
     } catch{
       console.log("FIle Not Found");
       return "";
+    }
+  }
+
+  async checkImage(fileName, flatId) {
+    try{
+    flatId = flatId.replace("-", "_");
+    const fileDir = 'file:///storage/emulated/0/DTCHS/Images/'+ flatId + '/';
+    const fileRes = await this.file.checkFile(fileDir, fileName);
+    return true;
+    } catch(err){
+      return false;
     }
   }
 }

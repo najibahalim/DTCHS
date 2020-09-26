@@ -13,9 +13,11 @@
 <ion-content>
   
   <ion-list>
-    <ion-item *ngFor="let flat of flats" [routerLink]="'/addFlatReading/' + flat">
+    <ion-item *ngFor="let flat of flats" [routerLink]="'/addFlatReading/' + flat.label">
+      <ion-icon name="checkmark-outline" slot="end" *ngIf="flat.tick1" class="tick1"></ion-icon>
+      <ion-icon name="checkmark-outline" slot="end" *ngIf="flat.tick2" class="tick2"></ion-icon>
       <ion-label class="ion-text-wrap">
-        <h2> {{flat}} </h2>
+        <h2> {{flat.label}} </h2>
       </ion-label>
     </ion-item>
 

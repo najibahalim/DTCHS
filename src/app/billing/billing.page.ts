@@ -14,35 +14,43 @@ import pdfMake from 'pdfmake/build/pdfmake';
 })
 export class BillingPage implements OnInit {
 
-  noOfTankers = 5;
-  slab1 = 18000;
-  slab2 = 23000;
-  slab1Cost = 0.1;
-  slab2Cost = 0.4;
-  slab3Cost = 1.3;
+  noOfTankers = 0;
+  slab1 = 0;
+  slab2 = 0;
+  slab1Cost = 0.01;
+  slab2Cost = 0.04;
+  slab3Cost = 0.11;
   costPerTanker = 1000;
   disabled = false;
-  months = ["Jan 2020","Feb 2020","March 2020","April 2020","May 2020","June 2020","July 2020"];
-  selectedMonth = this.months[this.months.length-1];
+  months = [];
+  selectedMonth;
   pdfReadings = [];
   pdfObj; //final Pdf created
 
 
   constructor(public loadingController: LoadingController, private databaseService: DatabaseService, private platform: Platform, private plt: Platform, private dbService: DatabaseService, private file: File, private fileOpener: FileOpener) {
-
-
-
    }
 
   ngOnInit() {
    this.platform.ready().then(async() => {
+
      await this.showLoader();
+     let date = new Date(2020, 2, 1);
+     let currentDate = new Date();
+     while (date.getMonth() != currentDate.getMonth() || date.getFullYear() != currentDate.getFullYear()) {
+       this.months.push(date.toLocaleString('default', { month: 'long' }) + ' ' + date.getFullYear());
+       date.setMonth(date.getMonth() + 1);
+     }
+     this.months.push(date.toLocaleString('default', { month: 'long' }) + ' ' + date.getFullYear());
+
+     this.selectedMonth = this.months[this.months.length - 1];
      let pdfData:any = await this.databaseService.getBillData(this.selectedMonth, this.months[this.months.indexOf(this.selectedMonth) - 1], this.noOfTankers, this.slab3Cost, this.costPerTanker);
      console.log(pdfData);
      if(pdfData.error){
       alert(pdfData.error);
       this.disabled = true;
      } else {
+       this.disabled = false;
        this.slab1 = pdfData.slab1;
        this.slab2 = pdfData.slab2;
        this.pdfReadings = pdfData.flatbill;
@@ -61,6 +69,7 @@ export class BillingPage implements OnInit {
       alert(pdfData.error);
       this.disabled = true;
     } else {
+      this.disabled = false;
       this.slab1 = pdfData.slab1;
       this.slab2 = pdfData.slab2;
       this.pdfReadings = pdfData.flatbill;
@@ -99,10 +108,12 @@ export class BillingPage implements OnInit {
       let flatReading = reading.totalReading;
       let cost1 = Math.min(this.slab1, flatReading) * this.slab1Cost;
       flatReading -= this.slab1;
+
+      let l_slab2 = this.slab2 - this.slab1;
       let cost2 = 0;
       if (flatReading > 0)
-        cost2 = Math.min(this.slab2, flatReading) * this.slab2Cost;
-      flatReading -= this.slab2;
+        cost2 = Math.min(l_slab2, flatReading) * this.slab2Cost;
+      flatReading -= l_slab2;
       let cost3 = Math.max(0, flatReading) * this.slab3Cost;
       reading.total = Math.round(cost1 + cost2 + cost3);
     });
@@ -139,10 +150,10 @@ export class BillingPage implements OnInit {
 
         // Save the PDF to the data Directory of our App
         let url = await this.dbService.getStoragePath("Bills");
-        this.file.writeFile(url, 'DTCHS.pdf', blob, { replace: true }).then(fileEntry => {
+        this.file.writeFile(url, new Date().toDateString() + '.pdf', blob, { replace: true }).then(fileEntry => {
           // Open the PDf with the correct OS tools
           this.hideLoader();
-          this.fileOpener.open(url + 'DTCHS.pdf', 'application/pdf');
+          this.fileOpener.open(url + new Date().toDateString() + '.pdf', 'application/pdf');
 
         })
       });

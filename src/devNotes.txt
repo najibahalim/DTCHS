@@ -1,0 +1,12 @@
+Date Formats::
+
+
+
+Flat Formats::
+
+Add montly Reading: A-G02K, A-201T
+Display date format: DD/MM/YY
+
+Database date = Date.toString();
+
+Image format: YYYY-MM-DDK.jpg

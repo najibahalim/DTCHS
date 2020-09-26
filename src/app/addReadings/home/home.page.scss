@@ -16,6 +16,7 @@ ion-item h2 {
   font-weight: 600;
   margin: 10px;
   text-align: center;
+
 }
 
 ion-item p {
@@ -31,10 +32,11 @@ ion-item .date {
   display: flex;
 }
 
-ion-item ion-icon {
-  color: #c9c9ca;
-}
 
+ion-item ion-icon {
+  color: green;
+  padding-right: 20px;
+}
 ion-item ion-note {
   font-size: 15px;
   margin-right: 8px;

@@ -1,5 +1,5 @@
 {
-  "name": "DTCHS",
+  "name": "DTCHS Water Bill",
   "integrations": {
     "capacitor": {},
     "cordova": {}
