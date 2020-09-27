@@ -79,5 +79,15 @@
           <p style="padding:5px;">Generate Bills</p>
         </ion-button>
     </div>
+   
   </form>
+  <div class="ion-padding">
+    <ion-button expand="block" class="ion-no-margin" disabled={{disabled}} (click)="generateReport('xlsx')" color=secondary>
+      <ion-icon name="document-outline"></ion-icon>
+      <p style="padding:5px;">Get Excel Summary</p>
+    </ion-button>
+  </div>
+  <br />
+  <br />
+
 </ion-content>

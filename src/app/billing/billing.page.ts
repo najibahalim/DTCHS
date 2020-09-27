@@ -42,8 +42,9 @@ export class BillingPage implements OnInit {
        date.setMonth(date.getMonth() + 1);
      }
      this.months.push(date.toLocaleString('default', { month: 'long' }) + ' ' + date.getFullYear());
-
-     this.selectedMonth = this.months[this.months.length - 1];
+     this.months = this.months.reverse();
+     this.selectedMonth = this.months[0];
+     
      let pdfData:any = await this.databaseService.getBillData(this.selectedMonth, this.months[this.months.indexOf(this.selectedMonth) - 1], this.noOfTankers, this.slab3Cost, this.costPerTanker);
      console.log(pdfData);
      if(pdfData.error){
@@ -68,6 +69,8 @@ export class BillingPage implements OnInit {
     if (pdfData.error) {
       alert(pdfData.error);
       this.disabled = true;
+      this.slab1 = 0;
+      this.slab2 = 0;
     } else {
       this.disabled = false;
       this.slab1 = pdfData.slab1;
@@ -101,9 +104,11 @@ export class BillingPage implements OnInit {
 
   }
 
-  async generateReport() {
+  async generateReport(type) {
+    await this.calculateSlabs();
     await this.showLoader();
     //calculate total cost
+    
     this.pdfReadings.forEach(reading=>{
       let flatReading = reading.totalReading;
       let cost1 = Math.min(this.slab1, flatReading) * this.slab1Cost;
@@ -119,19 +124,26 @@ export class BillingPage implements OnInit {
     });
     try {
       //get main params set
-      var docDefinition = await PDFUtils.generatePdfObj({
-        month: (this.selectedMonth).toUpperCase(),
-        prevMonth: (this.months[this.months.indexOf(this.selectedMonth) - 1].split(' ')[0]).toUpperCase(),
-        currMonth: (this.selectedMonth.split(' ')[0]).toUpperCase(),
-        slab1: this.slab1,
-        slab2: this.slab2,
-        slab1Cost: this.slab1Cost,
-        slab2Cost: this.slab2Cost,
-        slab3Cost: this.slab3Cost
-      },this.pdfReadings);
-      //generate pdf
-      this.pdfObj = await pdfMake.createPdf(docDefinition);
-      await this.downloadPdf();
+      
+      if(type==="xlsx"){
+        await this.downloadXlsx();
+        await this.hideLoader();
+      } else {
+        //generate pdf
+        var docDefinition = await PDFUtils.generatePdfObj({
+          month: (this.selectedMonth).toUpperCase(),
+          prevMonth: (this.months[this.months.indexOf(this.selectedMonth) - 1].split(' ')[0]).toUpperCase(),
+          currMonth: (this.selectedMonth.split(' ')[0]).toUpperCase(),
+          slab1: this.slab1,
+          slab2: this.slab2,
+          slab1Cost: this.slab1Cost,
+          slab2Cost: this.slab2Cost,
+          slab3Cost: this.slab3Cost
+        }, this.pdfReadings);
+        this.pdfObj = await pdfMake.createPdf(docDefinition);
+        await this.downloadPdf();
+      }
+
 
     } catch(err){
       console.log(err);
@@ -161,6 +173,20 @@ export class BillingPage implements OnInit {
       // On a browser simply use download!
       this.pdfObj.download();
     }
+  }
+
+  async downloadXlsx(){
+    let xlsxReadingss = [];
+    this.pdfReadings.forEach(reading=>{
+      xlsxReadingss.push({
+        "FlatNo": reading.flat,
+        "Net_Kitchen": reading.netk,
+        "Net_Toilet": reading.nett,
+        "Total_Reading": reading.totalReading,
+        "Bill_Amount":reading.total
+      });
+    })
+     this.databaseService.saveFile(xlsxReadingss, "Summary", "true");
   }
 
 

@@ -303,7 +303,7 @@ export class DatabaseService {
     });
   }
 
-  saveFile = (data) => {
+  saveFile = (data, name="", open="") => {
     return new Promise((resolve, reject) => {
       let sheet = XLSX.utils.json_to_sheet(data);
       let sheetName = "" + new Date().toDateString()
@@ -332,10 +332,18 @@ export class DatabaseService {
       this.blob = blob;
       this.getStoragePath("Reports").then(function (url) {
         let fileName = new Date().toDateString() + ".xlsx"
+        if(name) {
+          fileName = name + "_" + fileName;
+        }
         self.url = url + fileName;
         self.file.writeFile(url, fileName, blob, { replace: true }).then(() => {
           console.log("File saved in folder DTCHS");
-          resolve();
+          if(open!=""){
+            self.fileOpener.open(self.url, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+              .then(() => {console.log('File is opened'); resolve()})
+              .catch(e => console.log('Error opening file', e));
+          }
+          else resolve();
         }).catch((err) => {
           console.log(err);
           alert("error creating file at :" + url);
