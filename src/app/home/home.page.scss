@@ -1,68 +1,30 @@
-ion-content ion-toolbar {
-  --background: var(--ion-background-color);
-}
+ ion-col {
+   background-color: #f7f7f7;
+   border: solid 1px #ddd;
+   padding: 2px;
+ }
 
-ion-item {
-  --padding-start: 0;
-  --inner-padding-end: 0;
-}
+ ion-select {
+   --padding-top: 0px !important;
+   --padding-end: 0px !important;
+   --padding-bottom: 0px !important;
+   --padding-start: 0px !important;
+ }
 
-ion-label {
-  margin-top: 12px;
-  margin-bottom: 12px;
-}
+ .subheading {
+   padding-left: 10px;
+   padding-top: 10px;
+   margin: 2px;
+   padding-bottom: 5px;
+ }
 
-ion-item h2 {
-  font-weight: 600;
-  margin: 10px;
-  text-align: center;
-}
+ .subnote {
+   padding-left: 10px;
+   padding-top: 10px;
+   margin: 2px;
+   padding-bottom: 5px;
+ }
 
-ion-item p {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 95%;
-}
-
-ion-item .date {
-  float: right;
-  align-items: center;
-  display: flex;
-}
-
-ion-item ion-icon {
-  color: #c9c9ca;
-}
-
-ion-item ion-note {
-  font-size: 15px;
-  margin-right: 8px;
-  font-weight: normal;
-}
-
-ion-item ion-note.md {
-  margin-right: 14px;
-}
-
-.dot {
-  display: block;
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  align-self: start;
-  margin: 16px 10px 16px 16px;
-}
-
-.dot-unread {
-  background: var(--ion-color-primary);
-}
-
-.addButton {
-  text-decoration: none !important;
-}
-
-ion-footer ion-title {
-  font-size: 11px;
-  font-weight: normal;
-}
+ .ion-checkbox {
+   margin: 0px !important;
+ }

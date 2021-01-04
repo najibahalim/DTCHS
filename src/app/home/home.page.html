@@ -1,51 +1,305 @@
 <ion-header>
-  <ion-toolbar color=primary>
-    <ion-title size="large">
-      Select a Wing
-    </ion-title>
+  <ion-toolbar>
+    <ion-title>New Report</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content> 
-  <ion-list>
-    <ion-item  *ngFor="let wing of wings" [routerLink]="'/flat/' + wing.id" >
-      <ion-label  class="ion-text-wrap">
-        <h2>{{wing.name}}</h2>
+
+<ion-content fullscreen>
+
+  <ion-list lines="full" class="ion-no-margin" *ngFor="let section of reportFields">
+
+    <!-- section heading start -->
+    <ion-item-divider color="secondary">
+      <ion-label>
+        {{section.title}}
       </ion-label>
-    </ion-item>
+    </ion-item-divider>
+    <!-- Section heading end -->
+
+
+    <!-- radio section -->
+    <ion-radio-group *ngIf="section.type == 'radio'" mode="md" [(ngModel)]="pdfData['fansection']">
+      <ion-item *ngFor="let option of section.options">
+        <ion-label>{{option.name}}</ion-label>
+        <ion-radio slot="start" [value]=option.value></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <!-- input section  -->
+    <span *ngIf="section.type == 'input'">
+      <ion-item *ngFor="let field of section.fields">
+        <ion-label position="stacked">{{field.label}}</ion-label>
+
+        <ion-input type="{{field.type}}" placeholder="{{field.placeholder}}" [(ngModel)]="pdfData[field.store]">
+        </ion-input>
+      </ion-item>
+    </span>
   </ion-list>
-  <ion-item-divider color="primary">
+
+  <!-- Part1 A-->
+  <ion-item-divider color="secondary">
     <ion-label>
-     <ion-title> <ion-icon name="list-outline"></ion-icon>  <span style="padding:10px;">Actions</span></ion-title> 
+      Part-1 A
     </ion-label>
   </ion-item-divider>
-  <div class="ion-padding">
-    <ion-button expand="block" class="ion-no-margin" (click)="saveFile()" color=warning>
-      <ion-icon name="save-outline"></ion-icon> <p style="padding:5px;">Generate Excel File</p>
-    </ion-button>
-  </div>
 
-  <div class="ion-padding">
-    <ion-button expand="block" class="ion-no-margin" (click)="shareFile()" color=warning>
-      <ion-icon name="share-social-outline"></ion-icon>
-      <p style="padding:5px;">Share Excel File</p>
-    </ion-button>
-  </div>
+  <!-- Checking Method -->
+  <ion-item>
+    <ion-label class="bold" position="stacked"> Document</ion-label>
+    <ion-radio-group mode="md" [(ngModel)]="pdfData['doc1']">
+      <ion-item>
+        <ion-label>Order Execution</ion-label>
+        <ion-radio slot="start" value="0"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Data Sheet</ion-label>
+        <ion-radio slot="start" value="1"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-item>
 
-    <div class="ion-padding">
-     <a href="addreadings" class="addButton">   <ion-button expand="block" class="ion-no-margin" color=success>
-        <ion-icon name="add-circle"></ion-icon>
-        <p style="padding:5px;">Add Monthly Reading</p>
-      </ion-button></a>
-    </div>
+  <p class="subheading">Parameters to check: </p>
+  <!-- Parameters to check  -->
 
-    <div class="ion-padding">
-      <a href="billing" class="addButton">
-       
-        <ion-button expand="block" class="ion-no-margin" color=danger>
-          <ion-icon name="document-outline"></ion-icon>
-          <p style="padding:5px;">Generate Bill</p>
-        </ion-button>
-     
-     </a>
-    </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4">
+        Component
+      </ion-col>
+      <ion-col size="4">
+        MOC
+      </ion-col>
+      <ion-col size="4">
+        THK
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let p of pdfData.part1A; let i=index">
+      <ion-col size="4">
+        {{p.label}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-select #part1A1 interface="popover" [value]="p.val1" [selectedText]="p.val1"
+          (ionChange)="selectChanged(part1A1.value, i, 'S1')">
+          <ion-select-option *ngFor="let v of p.op1" value="{{v}}">{{v}}</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="4">
+        <ion-select #part1A2 interface="popover" [value]="p.val2" [selectedText]="p.val2"
+          (ionChange)="selectChanged(part1A2.value, i, 'S2')">
+          <ion-select-option *ngFor="let v of p.op2" value="{{v}}">{{v}}</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Part1 B-->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Part-1 B
+    </ion-label>
+  </ion-item-divider>
+
+  <!-- Checking Method -->
+  <ion-item>
+    <ion-label class="bold" position="stacked"> Document</ion-label>
+    <ion-radio-group mode="md" [(ngModel)]="pdfData['doc2']">
+      <ion-item>
+        <ion-label>Order Execution</ion-label>
+        <ion-radio slot="start" value="0"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Data Sheet</ion-label>
+        <ion-radio slot="start" value="1"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-item>
+
+  <p class="subheading">Parameters to check: </p>
+  <!-- Parameters to check  -->
+
+  <ion-grid>
+    <ion-row *ngFor="let p of pdfData.part1B; let i=index">
+      <ion-col size="4">
+        {{p.label}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-select #part1B interface="popover" [value]="p.val1" [selectedText]="p.val1"
+          (ionChange)="selectChanged(part1B.value, i, 'S3')">
+          <ion-select-option *ngFor="let v of p.op1" value="{{v}}">{{v}}</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- Remarks-->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Remarks (Part-1)
+    </ion-label>
+  </ion-item-divider>
+  <ion-item>
+    <ion-textarea placeholder="Enter remarks" [(ngModel)]="pdfData.remarks"></ion-textarea>
+  </ion-item>
+
+  <!-- Part2 -->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Part - 2
+    </ion-label>
+  </ion-item-divider>
+
+  <span *ngFor="let p of pdfData.part2Parameters; let i=index">
+    <ion-item *ngIf="p.typesOfSections.includes(pdfData.fansection)">
+      <ion-checkbox [(ngModel)]="p.isSelected"></ion-checkbox>
+      <ion-card-header>
+      
+        <p>{{p.label}}</p>
+        <ion-card-subtitle>Checking Method: {{p.method}}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-item>
+    
+    <!-- <ion-item lines="none">
+      <ion-checkbox slot="start" color='secondary'></ion-checkbox>
+      <ion-label>Applicable</ion-label>
+    </ion-item> -->
+
+    <!-- <ion-item lines="none">
+      <ion-label>Size:</ion-label>
+      <ion-input placeholder="Enter Size"></ion-input> -->
+
+    <!-- </ion-item> -->
+
+
+  </span>
+
+  <!-- Accessories -->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Accessories
+    </ion-label>
+  </ion-item-divider>
+  <ion-list>
+    <ion-item *ngFor="let acc of pdfData.accessories">
+      <ion-checkbox color="secondary" [(ngModel)]="acc.isChecked"></ion-checkbox>
+      <ion-label text-wrap>{{acc.label}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Photos -->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Photos
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-item>
+    <ion-thumbnail slot="end">
+      <img [src]="images[0]" (click)="presentPopover(0)">
+    </ion-thumbnail>
+    <ion-label><ion-button (click)="pickImage(0)">
+      Capture Photo 1
+    </ion-button></ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-thumbnail slot="end">
+      <img [src]="images[1]">
+    </ion-thumbnail>
+    <ion-label>
+      <ion-button (click)="pickImage(1)">
+        Capture Photo 2
+      </ion-button>
+    </ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-thumbnail slot="end">
+      <img [src]="images[2]">
+    </ion-thumbnail>
+    <ion-label>
+      <ion-button (click)="pickImage(2)">
+        Capture Photo 3
+      </ion-button>
+    </ion-label>
+  </ion-item>
+
+  <!-- Signatures -->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Signatures
+    </ion-label>
+  </ion-item-divider>
+  <ion-card>
+    <ion-item>
+      <ion-label position='stacked'>QC Checked By: </ion-label>
+      <ion-input placeholder='Enter Name' [(ngModel)]="pdfData['QCCheckedBy']"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position='stacked'>Date </ion-label>
+      <ion-input placeholder='Selece date' type='date' [(ngModel)]="pdfData['QCDate']"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position='stacked'>Assembled By: </ion-label>
+      <ion-input placeholder='Enter Name' [(ngModel)]="pdfData['AssembledBy']"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position='stacked'>Date </ion-label>
+      <ion-input placeholder='Select Date' type='date' [(ngModel)]="pdfData['AssembleDate']"></ion-input>
+    </ion-item>
+  </ion-card>
+
+  <ion-item>
+    <ion-label position='stacked'>Time End </ion-label>
+    <ion-input placeholder='Enter time' type='time' [(ngModel)]="pdfData['TimeEnd']"></ion-input>
+  </ion-item>
+  <!-- Rating -->
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Rating
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-card>
+    <ion-list>
+      <ion-radio-group mode="md" [(ngModel)]="pdfData['rating']">
+        <ion-item>
+          <ion-label>A (Good)</ion-label>
+          <ion-radio slot="start" value="A"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>B (Minor Comments)</ion-label>
+          <ion-radio slot="start" value="B"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>C (Major Comments)</ion-label>
+          <ion-radio slot="start" value="C"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>D (Rejected)</ion-label>
+          <ion-radio slot="start" value="D"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </ion-card>
+  <ion-item-divider color="secondary">
+    <ion-label>
+      Resolution
+    </ion-label>
+  </ion-item-divider>
+  <ion-card>
+    <ion-list>
+      <ion-radio-group mode="md" [(ngModel)]="pdfData['QCStatus']">
+        <ion-item>
+          <ion-label>QC Passed</ion-label>
+          <ion-radio slot="start" value="1"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>QC Failed</ion-label>
+          <ion-radio slot="start" value="0"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </ion-card>
+
+  <ion-button expand="block" color="secondary" (click)="generatePdf()">Generate PDF</ion-button>
 </ion-content>

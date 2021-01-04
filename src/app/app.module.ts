@@ -23,7 +23,10 @@ import { ImageViewerPageModule } from './image-viewer/image-viewer.module';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ImageViewerPageModule],
+  imports: [BrowserModule, IonicModule.forRoot({
+    rippleEffect: true,
+    mode: 'ios'
+  }), AppRoutingModule, ImageViewerPageModule],
   providers: [
     StatusBar,
     SplashScreen,
