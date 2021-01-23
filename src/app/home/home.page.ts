@@ -13,7 +13,7 @@ import { LoadingController } from '@ionic/angular';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
-import { fetchAccessories, fetchPart1AParameters, fetchReportFields, fetchPart1BParameters, part2Parameters } from './const';
+import { fetchAccessories, fetchPart1AParameters, fetchReportFields, fetchPart1BParameters, part2Parameters, filterDimensions } from './const';
 import { AlertController } from '@ionic/angular'
 
 import { File } from '@ionic-native/file/ngx';
@@ -25,11 +25,11 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  reportFields;
-  pdfObj;
-  images = ['assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg'];
+  reportFields: any;
+  pdfObj: any;
+  images = ['assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg', 'assets/noImageAvailable.jpg'];
   win: any = window;
-  pdfData = { accessories: [], part1A: {}, part1B: {}, part2Parameters: [], fansection: 5 };
+  pdfData = { accessories: [], part1A: {}, part1B: {}, part2Parameters: [], fansection: 5, images: [], filterDimensions: [] };
   constructor(public alertController: AlertController, private plt: Platform,
     public loadingController: LoadingController, private file: File, private fileOpener: FileOpener, private camera: Camera, public popoverController: PopoverController) { }
 
@@ -39,6 +39,7 @@ export class HomePage {
     this.pdfData.part1A = fetchPart1AParameters();
     this.pdfData.part1B = fetchPart1BParameters();
     this.pdfData.part2Parameters =  part2Parameters();
+    this.pdfData.filterDimensions = filterDimensions();
   }
 
   pickImage(id: number) {
@@ -56,6 +57,7 @@ export class HomePage {
       console.log(imageLink);
       this.images[id] = this.win.Ionic.WebView.convertFileSrc(imageLink);
     }, (err) => {
+      console.log(err);
       alert("Error while capturing image " +  err);
     });
   }
@@ -80,10 +82,12 @@ export class HomePage {
       }
     });
   }
-  
+
+
   async generatePdf() {
     await this.showLoader();
     this.removeUnapplicableFanSections();
+    this.pdfData.images = this.images;
     console.log(this.pdfData);
     const docDefination = await PDFUtils.generatePdfObj(this.pdfData);
     this.pdfObj = await pdfMake.createPdf(docDefination);

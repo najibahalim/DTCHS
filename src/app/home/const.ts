@@ -146,6 +146,7 @@ export const part2Parameters = () => {
       FanSections.HeatRecovery,
       FanSections.None],
       isSelected: false,
+      fields:[{label:'Size', value: ''}]
     },
     {
       label: "Corner Joints",
@@ -171,6 +172,7 @@ export const part2Parameters = () => {
       typesOfSections: [FanSections.Supply,
         FanSections.Return],
       isSelected: false,
+      fields: [{ label: 'Fan Model', value: '' }, { label: 'Fan Serial No', value: '' }, { label: 'Fan Curve', value: '' }, { label: 'Fan Make', value: '' }]
     },
     {
       label: "Calculated Fan Rpm ",
@@ -185,6 +187,7 @@ export const part2Parameters = () => {
       typesOfSections: [FanSections.Supply,
         FanSections.Return],
       isSelected: false,
+      fields:[{ label: 'Motor Power', value: '' }, { label: 'Motor Pole', value: '' }, { label: 'Motor Efficiency', value: '' }, { label: 'Motor Make', value: '' }, { label: 'Motor Serial No', value: '' }]
     },
     {
       label: "Pulleys Size",
@@ -306,6 +309,7 @@ export const part2Parameters = () => {
       FanSections.Coil,
         FanSections.HeatRecovery],
       isSelected: false,
+      fields: [{ label: 'Heat Recovery Type', type:'list', options: [{label:'Thermal Wheel', isChecked: false}, {label:'HPHR', isChecked: false}, {label: 'Heat Pipe', isChecked: false}] }, { label: 'Heat Recovery Make', value: '' }, { label: 'Heat Recovery Model', value: '' }, { label: 'Heat Recovery Size', value: '' }]
     },
     {
       label: "Reinforcements for bag filter frame if Unit size above 14",
@@ -327,6 +331,7 @@ export const part2Parameters = () => {
       typesOfSections: [
         FanSections.Filter],
       isSelected: false,
+      fields: [{ label: 'Damper Type', value: '' }, { label: 'Damper Size', value: '' }]
     },
     {
       label: "Drain Pan insulation / Sealant ",
@@ -339,6 +344,7 @@ export const part2Parameters = () => {
       method: "",
       typesOfSections: [FanSections.Coil],
       isSelected: false,
+      fields: [{ label: 'Coil Model', value: '' }, { label: 'Electric Heater Make', value: '' }, { label: 'Electric Heater Model', value: '' }, { label: 'Electric Heater Size', value: '' }, { label: 'UV Lamp Model', value: '' }, { label: 'UV Lamp Size', value: '' }, { label: 'UV Lamp Qty', value: '' }, { label: 'Elimiator Size', value: '' }, { label: 'Damper Type', value: '' }, { label: 'Damper Size', value: '' }]
     },
     {
       label: "Coil free from fin damages",
@@ -349,3 +355,62 @@ export const part2Parameters = () => {
   ]
 
 }
+
+export const filterDimensions = () => {
+  return [
+    {
+      type: 'G2',
+      isChecked: false,
+      size: '592 x 592 x 48',
+      qty: ''
+    },
+    {
+      type: 'G3',
+      isChecked: false,
+      size: '592 x 28 x 48',
+      qty: ''
+    },
+    {
+      type: 'G4',
+      isChecked: false,
+      size: '',
+      qty: ''
+    },
+    {
+      type: 'RF7',
+      isChecked: false,
+      size: '592 x 592 x 282',
+      qty: ''
+    },
+    {
+      type: 'RF8',
+      isChecked: false,
+      size: '592 x 87 x 282',
+      qty: ''
+    },
+    {
+      type: 'RF9',
+      isChecked: false,
+      size: '',
+      qty: ''
+    },
+    {
+      type: 'LF7',
+      isChecked: false,
+      size: '592 x 592 x 535',
+      qty: ''
+    },
+    {
+      type: 'LF8',
+      isChecked: false,
+      size: '592 x 287 x 535',
+      qty: ''
+    },
+    {
+      type: 'LF9',
+      isChecked: false,
+      size: '',
+      qty: ''
+    }
+  ]
+} 

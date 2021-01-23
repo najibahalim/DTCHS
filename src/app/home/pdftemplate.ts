@@ -2,8 +2,20 @@ import {FanSections} from './const';
 export class PDFUtils {
   public static noImage: any;
 
+  public static async getBase64ImageUrls(imagesArr: string[]) {
+    const base64ImageUrls = [];
+    for(let image of imagesArr) {
+      base64ImageUrls.push(await PDFUtils.getBase64ImageFromURL(image));
+    }
+    return base64ImageUrls;
+  }
+
+
   public static async generatePdfObj(pdfData:any) {
     PDFUtils.noImage = await PDFUtils.getBase64ImageFromURL('assets/icon.png');
+    pdfData.images = await PDFUtils.getBase64ImageUrls(pdfData.images);
+    const damperIndex = pdfData.fansection === 4 ? 22 : 24; // 4 is for Coil Fan Section 
+    const damperField = pdfData.fansection === 4 ? 0 : 8;
     let pdfTemplate = {
       pageSize: 'A4',
       content: [
@@ -72,13 +84,13 @@ export class PDFUtils {
               {},
               { text: 'Measuring Tape (Executive Drawing)', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[0].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Size: _____' }],
+                { text: 'Size: ' + pdfData.part2Parameters[0].fields[0].value }],
               //row 11
               [{ text: 'Corners Joints', colSpan: 2, alignment: 'center' },
               {},
               { text: 'Visual', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[1].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Model: ____ \n\nSerial No: ____\n\nCurve: _____\t\t\tMake:- _____', rowSpan: 3 }],
+                { text: `Model: ${pdfData.part2Parameters[3].fields[0].value} \n\nSerial No: ${pdfData.part2Parameters[3].fields[1].value}\n\nCurve: ${pdfData.part2Parameters[3].fields[2].value}\t\t\tMake:- ${pdfData.part2Parameters[3].fields[3].value}`, rowSpan: 3 }],
               //row 12
               [{ text: 'Fan Model and Orientation', colSpan: 2, alignment: 'center' },
               {},
@@ -94,7 +106,7 @@ export class PDFUtils {
               {},
               { text: 'Visual (Technical DS)', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[5].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Kw: _____\t\t Pole: ______\t\t Effi: ______\t\t Make: ______' }],
+                { text: `Kw: ${pdfData.part2Parameters[5].fields[0].value}\t\t Pole: ${pdfData.part2Parameters[5].fields[1].value}\t\t Effi: ${pdfData.part2Parameters[5].fields[2].value}\t\t Make:${pdfData.part2Parameters[5].fields[3].value}\t\t S.no ${pdfData.part2Parameters[5].fields[4].value}` }],
               //row 15
               [{ text: 'Pulleys Size', colSpan: 2, alignment: 'center' },
               {},
@@ -128,7 +140,7 @@ export class PDFUtils {
               {},
               { text: 'Visual (Fan assembly dwg.)', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[10].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Cooling Coil: ____ \n\n\nSno: _____', rowSpan: 3 }],
+                { text: `Cooling Coil Model: ${pdfData.part2Parameters[24].fields[0].value} \n\n\nSno: _____`, rowSpan: 3 }],
               //row 20
               [{ text: 'Flexible Connector and Gasket', colSpan: 2, alignment: 'center' },
               {},
@@ -144,7 +156,7 @@ export class PDFUtils {
               {},
               { text: 'Visual', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[13].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Damper: ____ ', rowSpan: 2 }],
+                { text: `Damper Type: ${pdfData.part2Parameters[damperIndex].fields[damperField].value} \t\t Damper Size: ${pdfData.part2Parameters[damperIndex].fields[damperField + 1].value}`, rowSpan: 2 }],
               //row 23
               [{ text: 'Rigging Hole Position and Marking', colSpan: 2, alignment: 'center' },
               {},
@@ -155,7 +167,7 @@ export class PDFUtils {
               {},
               { text: 'Visual (Technical DS)', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[15].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Heat Recovery :: ____ \n\nThermal Wheel\nHPHR\nHeat Pipe\n', rowSpan: 2 }],
+                { text: `Heat Recovery Type :: \n\n[ ${pdfData.part2Parameters[19].fields[0].options[0].isChecked ? '√' : ' '}  ] Thermal Wheel\n[ ${pdfData.part2Parameters[19].fields[0].options[1].isChecked ? '√' : ' '}  ] HPHR\n [ ${pdfData.part2Parameters[19].fields[0].options[2].isChecked ? '√' : ' '}  ] Heat Pipe\n`, rowSpan: 2 }],
               //row 25
               [{ text: 'Jointing kit pack (Bolt,Nut & Gasket)', colSpan: 2, alignment: 'center' },
               {},
@@ -166,19 +178,19 @@ export class PDFUtils {
               {},
               { text: 'Visual check', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[17].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Electrical Heater: _____' }],
+                { text: `Electrical Heater Make: ${pdfData.part2Parameters[24].fields[1].value}\t\t Electrical Heater Model: ${pdfData.part2Parameters[24].fields[2].value}\t\t Electrical Heater Size: ${pdfData.part2Parameters[24].fields[3].value}` }],
               //row 27
               [{ text: 'Shipment bracket', colSpan: 2, alignment: 'center' },
               {},
               { text: 'Visual check', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[18].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'Eliminator: _____' }],
+                { text: `Eliminator Size: ${pdfData.part2Parameters[24].fields[7].value}` }],
               //row 28
               [{ text: 'Zinc spray on cut edges', colSpan: 2, alignment: 'center' },
               {},
               { text: 'Visual check', alignment: 'center' },
                 { text: `[ ${pdfData.part2Parameters[19].isSelected ? '√' : ' '}  ]`, alignment: 'center' },
-              { text: 'UV Lamp: _____' }],
+                { text: `UV Lamp Model: ${pdfData.part2Parameters[24].fields[4].value}\t\t UV Lamp Size: ${pdfData.part2Parameters[24].fields[5].value}\t\t UV Lamp Qty: ${pdfData.part2Parameters[24].fields[6].value}` }],
               //row 29
               [{ text: 'Filter Dimension :', alignment: 'center' },
               {
@@ -342,42 +354,42 @@ export class PDFUtils {
               //row 1
               [{
                 columns: [{
-                  image: 'sampleImage.jpg', width: 110, height: 25
+                  image: PDFUtils.noImage, width: 110, height: 25
                 }, { text: '', width: 200 }, { text: '', width: '*' },
                 { text: '', width: "*" }, { text: 'Mod. 76 - E\nRev.3 of 8-04-2020\nPage 2 of 2', width: "*", style: "headerinfo" }], colSpan: 2, alignment: 'left'
               }, {}],
               //row 2
               [{ colSpan: 2, text: ' \n\n\n  ' }, {}],
               [{
-                image: 'sampleImage.jpg',
+                image: pdfData.images[0],
                 width: 200,
                 height: 200,
                 alignment: 'center'
               }, {
-                image: 'sampleImage.jpg',
+                  image: pdfData.images[1],
                 width: 200,
                 height: 200,
                 alignment: 'center'
               },],
               //row 2
               [{
-                image: 'sampleImage.jpg',
+                image: pdfData.images[2],
                 width: 200,
                 height: 200,
                 alignment: 'center'
               }, {
-                image: 'sampleImage.jpg',
+                  image: pdfData.images[3],
                 width: 200,
                 height: 200,
                 alignment: 'center'
-              },],	//row 2
+              },],	//row 3
               [{
-                image: 'sampleImage.jpg',
+                image: pdfData.images[4],
                 width: 200,
                 height: 200,
                 alignment: 'center'
               }, {
-                image: 'sampleImage.jpg',
+                  image: pdfData.images[5],
                 width: 200,
                 height: 200,
                 alignment: 'center'
